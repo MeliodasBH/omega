@@ -7,8 +7,26 @@
  * publicids are dex numbers and any unique identifiers (if they're not a Pokemon, do a shorthand version of the card name)
  * Dex Number, (for multiple pokemon: DEX[lowercase letter, a, b, c, d])
 ********************/
+
+const fs = require('fs');
 const uuid = require('uuid');
-const cards = require('../config/card-data.js');
+let cards = {};
+let managers = [];
+let packs = [];
+let shop = {};
+
+try {
+	cards = JSON.parse(fs.readFileSync('./config/psgo/card-data.json', 'utf8'));
+} catch (e) {}
+try {
+	shop = JSON.parse(fs.readFileSync('./config/psgo/shop.json', 'utf8'));
+} catch (e) {}
+try {
+	managers = fs.readFileSync('./config/psgo/card-managers.csv', 'utf8').split(',');
+} catch (e) {}
+try {
+	packs = fs.readFileSync('./config/psgo/packs.csv', 'utf8').split(',');
+} catch (e) {}
 
 const colors = {
 	Mythic: '#D82A2A',
@@ -19,42 +37,39 @@ const colors = {
 	Common: '#000',
 };
 
-const shop = [
-	['XY-Base', 'Get three cards from the first pack released in the Pokemon XY set.', 10],
-	['XY-Flashfire', 'Get three cards from the Flashfire pack released in the Pokemon XY set.', 10],
-	['XY-Furious Fists', 'Get three cards from the Furious Fists pack released in the Pokemon XY set.', 10],
-	['XY-Phantom Forces', 'Get three cards from the Phantom Forces pack released in the Pokemon XY set.', 10],
-	['XY-Primal Clash', 'Get three cards from the Primal Clash pack released in the Pokemon XY set.', 10],
-	['XY-Roaring Skies', 'Get three cards from the Roaring Skies pack released in the Pokemon XY set.', 10],
-	['XY-Ancient Origins', 'Get three cards from the Ancient Origins pack released in the Pokemon XY set.', 10],
-	['XY-Generations', 'Get three cards from the Generations pack released in the Pokemon XY set.', 10],
-	['XY-Promo', 'Get three cards from the Promo pack released in the Pokemon XY set.', 20],
-	['BW-Legendary Treasures', 'Get three cards from the Legendary Treasures pack released in the Pokemon BW set.', 10],
-];
-let packShop = ['XY-Base', 'XY-Flashfire', 'XY-Furious Fists', 'XY-Phantom Forces', 'XY-Primal Clash', 'XY-Roaring Skies', 'XY-Ancient Origins', 'XY-Generations',
-	'XY-Promo', 'BW-Legendary Treasures', 'Double Crisis', 'Water', 'Fire', 'Fighting', 'Fairy', 'Dragon', 'Colorless', 'Psychic', 'Lightning', 'Darkness', 'Grass', 'OU-Pack', 'UU-Pack',
-	'Uber-Pack', 'PU-Pack', 'NU-Pack', 'RU-Pack', 'LC-Pack', 'BL-Pack', 'BL2-Pack', 'BL3-Pack', 'Gen1', 'Gen2', 'Gen3', 'Gen4', 'Gen5', 'Gen6', 'Metal', 'Trainer',
-	'Supporter', 'Item', 'Stadium', 'EX-Pack', 'Legendary', 'Full', 'Event'];
 const tourCardRarity = ['No Card', 'Common', 'Uncommon', 'Rare', 'Epic', 'Epic', 'Legendary', 'Legendary', 'Mythic'];
 const cardRarity = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic'];
-let cleanShop = [];
+let cleanPacks = [];
 let cleanCard = [];
 let rareCache = []; //Used to cache cards for tours
 let cardCache = []; //Used to cache cards in packs
 let userPacks = {}; //Used to store users unopened packs
 
+function saveCards() {
+	let data = "{\n";
+	for (let u in cards) {
+		data += '\t"' + u + '": ' + JSON.stringify(cards[u]) + ",\n";
+	}
+	data = data.substr(0, data.length - 2); // remove the last comma
+	data += "\n}";
+	fs.writeFileSync('config/psgo/card-data.json', data);
+}
+
+function log(message) {
+	if (!message) return false;
+	fs.appendFile('logs/psgo.log', '[' + new Date().toUTCString() + '] ' + message + '\n');
+}
+
 function cachePacks() {
-	for (let i = 0; i < packShop.length; i++) {
+	for (let i = 0; i < packs.length; i++) {
 		cardCache.push([]);
 		for (let key in cards) {
 			if (cards.hasOwnProperty(key)) {
 				let obj = cards[key];
-				if (obj.hasOwnProperty('collection') && obj.collection.indexOf(packShop[i]) > -1) cardCache[i].push(key);
+				if (obj.hasOwnProperty('collection') && obj.collection.indexOf(packs[i]) > -1) cardCache[i].push(key);
 			}
 		}
-	}
-	for (let i = 0; i < packShop.length; i++) {
-		cleanShop.push(toId(packShop[i]));
+		cleanPacks.push(toId(packs[i]));
 	}
 }
 
@@ -128,13 +143,11 @@ function getPointTotal(userid) {
 function getShopDisplay(shop) {
 	let display = "<table width='100%' border='1' style='border-collapse: collapse; color: #444; box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);' cellpadding='5'>" +
 		"<tr><th class='card-th' style='background-image: -moz-linear-gradient(center top , #EBF3FC, #DCE9F9); box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.8) inset;'>Command</th><th class='card-th' style='background-image: -moz-linear-gradient(center top , #EBF3FC, #DCE9F9); box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.8) inset;'>Description</th><th class='card-th' style='background-image: -moz-linear-gradient(center top , #EBF3FC, #DCE9F9); box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.8) inset;'>Cost</th></tr>";
-	let start = 0;
-	while (start < shop.length) {
-		display += "<tr>" + "<td class='card-td'><button name='send' value='/buypack " + shop[start][0] + "' style='border-radius: 12px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2) inset;'><b>" + shop[start][0] + "</b></button></td>" +
-			"<td class='card-td'>" + shop[start][1] + "</td>" +
-			"<td class='card-td'>" + shop[start][2] + "</td>" +
+	for (let u in shop) {
+		display += "<tr>" + "<td class='card-td'><button name='send' value='/buypack " + u + "' style='border-radius: 12px; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2) inset;'><b>" + u + "</b></button></td>" +
+			"<td class='card-td'>" + shop[u][0] + "</td>" +
+			"<td class='card-td'>" + shop[u][1] + "</td>" +
 			"</tr>";
-		start++;
 	}
 	display += "</table><center>To buy a pack from the shop, use /buypack <em>pack</em>.</center>";
 	return display;
@@ -189,6 +202,172 @@ cachePacks();
 cacheRarity();
 
 exports.commands = {
+	psgo: {
+		set: 'add',
+		add: function (target, room, user) {
+			if (!this.can('hotpatch') && !managers.includes(user.userid)) return this.errorReply("Access denied.");
+			if (!target) return this.parse("/help psgo");
+			let targets = target.split(',');
+			for (let u in targets) targets[u] = targets[u].trim();
+			if (!targets[5]) return this.parse("/help psgo");
+			let title = toId(targets[0]), name = targets[1], image = targets[2];
+			let rarity = targets[3], points = Math.round(Number(targets[4]));
+			let collections = targets.slice(5);
+
+			if (title.length < 1) return this.errorReply("Titles may not be less than one character.");
+			if (title.length > 30) return this.errorReply("Titles may not be longer than 30 charcters.");
+			if (cards[title]) return this.errorReply("That card already exists.");
+			if (name.length < 1) return this.errorReply("Names may not be less than one character.");
+			if (name.length > 30) return this.errorReply("Names may not be longer than 30 characters.");
+			if (image.length < 1) return this.errorReply("Invalid card image.");
+			if (image.length > 100) return this.errorReply("Image URLs may not be longer than 100 characters.");
+			if (!cardRarity.toString().toLowerCase().split(',').includes(rarity.toLowerCase())) return this.errorReply("Invalid rarity. (Valid rarities: " + cardRarity.join(', ') + ")");
+			if (isNaN(points)) return this.errorReply("Points must be a number.");
+			if (points < 1) return this.errorReply("Points must be greater than 0.");
+			if (points > 100) return this.errorReply("Points may not be greater than 100.");
+			for (let c in collections) {
+				if (!collections[c]) return this.errorReply("Invalid collection.");
+				if (toId(collections[c]).length < 1) return this.errorReply("Collection names must be longer than 1 character.");
+				if (toId(collections[c]).length > 30) return this.errorReply("Collection names may not be longer than 30 characters.");
+				if (!packs[collections[c]]) return this.errorReply("The pack \"" + collections[c] + "\" does not exist. Add it with /psgo pack add [pack].");
+			}
+
+			cards[title] = {
+				'name': name,
+				'card': image,
+				'rarity': rarity,
+				'collection': collections,
+				'points': points,
+			};
+			saveCards();
+			cachePacks();
+			log(user.name + ' has added the card "' + title + '". Name: "' + name + '". Card image: "' +
+				image + '". Rarity: "' + rarity + '". Points: "' + points + '". Collection: "' + collections.join(', ') + '".');
+			this.parse("/card " + title);
+		},
+		del: 'delete',
+		remove: 'delete',
+		rem: 'delete',
+		delete: function (target, room, user) {
+			if (!this.can('hotpatch') && !managers.includes(user.userid)) return this.errorReply("Access denied.");
+			if (!target) return this.parse("/help psgo");
+			let card = toId(target);
+			if (!cards[card]) return this.errorReply("That card does not exist.");
+
+			delete cards[card];
+			saveCards();
+			cachePacks();
+			this.sendReply("You've deleted the card \"" + toId(card) + "\".");
+			log(user.name + " has deleted the card \"" + toId(card) + "\".");
+		},
+		'': function (target, room, user) {
+			this.parse("/help psgo");
+		},
+		manager: {
+			set: 'add',
+			add: function (target, room, user) {
+				if (!this.can('hotpatch')) return false;
+				if (toId(target).length < 1 || toId(target).length > 19) return this.errorReply("Invalid name.");
+				if (managers.includes(toId(target))) return this.errorReply("That user is already a card manager.");
+				managers.push(toId(target));
+				fs.writeFileSync('config/psgo/card-managers.csv', managers.join(','));
+				this.sendReply("You've set " + target + " as a card manager.");
+				if (Users(target) && Users(target).connected) Users(target).send("|popup||html|" + Wisp.nameColor(user.name) + " has set you as a card manager.");
+				log(user.name + " set " + target + " as a card manager.");
+			},
+			del: 'delete',
+			remove: 'delete',
+			rem: 'delete',
+			delete: function (target, room, user) {
+				if (!this.can('hotpatch')) return false;
+				if (toId(target).length < 1 || toId(target).length > 19) return this.errorReply("Invalid name.");
+				if (!managers.includes(toId(target))) return this.errorReply("That user is not a card manager");
+				managers.splice(managers.indexOf(toId(target)), 1);
+				fs.writeFileSync('config/psgo/card-managers.csv', managers.join(','));
+				this.sendReply("You've removed " + target + "'s card manager status.");
+				if (Users(target) && Users(target).connected) Users(target).send("|popup||html|" + Wisp.nameColor(user.name) + " has removed your card manager status.");
+				log(user.name + " removed " + target + "'s card manager status.");
+			},
+			view: 'list',
+			list: function (target, room, user) {
+				if (!this.runBroadcast()) return;
+				if (managers.length < 1) return this.sendReplyBox("There are no card managers.");
+				let output = [];
+				for (let u in managers) output.push(Wisp.nameColor(managers[u], true));
+				this.sendReplyBox("The current card managers are:<br />" + output.join(', '));
+			},
+		},
+		pack: {
+			add: function (target, room, user) {
+				if (!this.can('hotpatch') && !managers.includes(user.userid)) return this.errorReply("Access denied.");
+				if (!target) return this.errorReply("Please specify a name for the pack.");
+				if (target.length < 1) return this.errorReply("Pack names may not be less than one character long.");
+				if (target.length > 20) return this.errorReply("Pack names may not be longer than 20 characters.");
+				if (cleanPacks.includes(toId(target))) return this.errorReply("That pack already exists.");
+				packs.push(toId(target));
+				fs.writeFileSync('config/psgo/packs.csv', packs.join(','));
+				cachePacks();
+				this.sendReply("The pack has been added.");
+				log(user.name + " has added a pack named " + target);
+			},
+			delete: function (target, room, user) {
+				if (!this.can('hotpatch') && !managers.includes(user.userid)) return this.errorReply("Access denied.");
+				if (!target) return this.errorReply("Please specify a pack to delete.");
+				if (!cleanPacks.includes(toId(target))) return this.errorReply("That pack does not exist.");
+				packs.splice(packs.indexOf(toId(target)), 1);
+				fs.writeFileSync('config/psgo/packs.csv', packs.join(','));
+				cachePacks();
+				this.sendReply("That pack has been removed.");
+				log(user.name + " has removed the pack named " + target);
+			},
+		},
+		shop: {
+			add: function (target, room, user) {
+				if (!this.can('hotpatch') && !managers.includes(user.userid)) return this.errorReply("Access denied.");
+				if (!target) return this.parse("/help psgo");
+				let targets = target.split(',');
+				for (let u in targets) targets[u] = targets[u].trim();
+				if (!targets[2]) return this.parse("/help psgo");
+				let pack = targets[0], desc = targets[1], price = Math.round(Number(targets[2]));
+
+				if (shop[pack]) return this.errorReply("That pack is already in the shop.");
+				if (!cleanPacks.includes(toId(pack))) return this.errorReply("That pack does not exist.");
+				if (desc.length < 1) return this.errorReply("Description may not be less than one character.");
+				if (desc.length > 100) return this.errorReply("Description may not be longer than 100 characters.");
+				if (isNaN(price)) return this.errorReply("Price must be a number.");
+				if (price < 1) return this.errorReply("Price must be at least 1 buck.");
+				if (price > 100) return this.errorReply("Price may not be more than 100 bucks.");
+
+				shop[pack] = [desc, price];
+				fs.writeFileSync('./config/psgo/shop.json', JSON.stringify(shop));
+				log(user.name + " has added the pack " + pack + " to the pack shop.");
+
+				this.sendReply("You've added the pack " + pack + " to the shop.");
+			},
+			delete: function (target, room, user) {
+				if (!this.can('hotpatch') && !managers.includes(user.userid)) return this.errorReply("Access denied.");
+				if (!target) return this.parse("/help psgo");
+				if (!shop[target]) return this.errorReply("That pack isn't currently in the shop.");
+
+				delete shop[target];
+				fs.writeFileSync('./config/psgo/shop.json', JSON.stringify(shop));
+				log(user.name + " has deleted the pack " + target + " from the pack shop.");
+				this.sendReply("You've removed the pack " + target + " from the shop.");
+			}
+		},
+	},
+	psgohelp: [
+		"/psgo add [title], [name], [card image], [rarity], [points], [collection(s)] (ex: XY-Promo, XY-Roaring Skies)",
+		"/psgo delete [title]",
+		"/psgo manager add [user]",
+		"/psgo manager delete [user]",
+		"/psgo manager list",
+		"/psgo pack add [pack name]",
+		"/psgo pack delete [pack name]",
+		"/psgo shop add [pack], [description], [price]",
+		"/psgo shop delete [pack]",
+	],
+
 	packs: 'pack',
 	pack: function (target, room, user) {
 		if (!this.runBroadcast()) return;
@@ -204,18 +383,16 @@ exports.commands = {
 	buypacks: 'buypack',
 	buypack: function (target, room, user) {
 		if (!target) return this.sendReply("/buypack - Buys a pack from the pack shop. Alias: /buypacks");
-		let self = this;
 		let packId = toId(target);
 		Economy.readMoney(user.userid, amount => {
-			if (cleanShop.indexOf(packId) < 0) return self.sendReply("This is not a valid pack. Use /packshop to see all packs.");
-			let shopIndex = cleanShop.indexOf(toId(target));
-			if (packId !== 'xybase' && packId !== 'xyfuriousfists' && packId !== 'xyflashfire' && packId !== 'xyphantomforces' && packId !== 'xyroaringskies' && packId !== 'xyprimalclash' && packId !== 'xyancientorigins' && packId !== 'xygenerations' && packId !== 'xypromo' && packId !== 'bwlegendarytreasures') return self.sendReply("This pack is not currently in circulation.  Please use /packshop to see the current packs.");
-			let cost = shop[shopIndex][2];
-			if (cost > amount) return self.sendReply("You need " + (cost - amount) + " more bucks to buy this pack.");
+			if (cleanPacks.indexOf(packId) < 0) return this.sendReply("This is not a valid pack. Use /packshop to see all packs.");
+			if (!shop[target]) return this.sendReply("This pack is not currently in circulation.  Please use /packshop to see the current packs.");
+			let cost = shop[target][1];
+			if (cost > amount) return this.sendReply("You need " + (cost - amount) + " more bucks to buy this pack.");
 			Economy.writeMoney(user.userid, -1 * cost);
 			let pack = toId(target);
-			self.sendReply('|raw|You have bought ' + target + ' pack for ' + cost + ' bucks. Use <button name="send" value="/openpack ' + pack + '"><b>/openpack ' + pack + '</b></button> to open your pack.');
-			self.sendReply("You have until the server restarts to open your pack.");
+			this.sendReply('|raw|You have bought ' + target + ' pack for ' + cost + ' bucks. Use <button name="send" value="/openpack ' + pack + '"><b>/openpack ' + pack + '</b></button> to open your pack.');
+			this.sendReply("You have until the server restarts to open your pack.");
 			if (!userPacks[user.userid]) userPacks[user.userid] = [];
 			userPacks[user.userid].push(pack);
 		});
@@ -234,17 +411,17 @@ exports.commands = {
 			this.sendReply("/openpack [pack] - Open a Pokemon Card Pack. Alias: /open, /openpacks");
 			return this.parse('/packs');
 		}
-		if (cleanShop.indexOf(toId(target)) < 0) return this.sendReply("This pack does not exist.");
+		if (cleanPacks.indexOf(toId(target)) < 0) return this.sendReply("This pack does not exist.");
 		if (!userPacks[user.userid] || userPacks[user.userid].length === 0) return this.sendReply("You have no packs.");
 		if (userPacks[user.userid].indexOf(toId(target)) < 0) return this.sendReply("You do not have this pack.");
 		let newPack;
 		for (let i = 0; i < 3; i++) {
 			newPack = toId(target);
-			let cacheValue = cardCache[cleanShop.indexOf(toId(target))];
+			let cacheValue = cardCache[cleanPacks.indexOf(toId(target))];
 			let card = cacheValue[Math.round(Math.random() * (cacheValue.length - 1))];
 			addCard(user.userid, card);
 			let cardName = cards[card].name;
-			let packName = packShop[cleanShop.indexOf(toId(target))];
+			let packName = packs[cleanPacks.indexOf(toId(target))];
 			this.sendReplyBox(user.name + ' got <font color="' + colors[cards[card].rarity] + '">' + cards[card].rarity + '</font> ' +
 			'<button name="send" value="/card ' + card + '"><b>' + cardName + '</b></button> from a ' +
 			'<button name="send" value="/buypack ' + packName + '">' + packName + ' Pack</button>.');
@@ -262,7 +439,7 @@ exports.commands = {
 		if (!parts[1]) return this.sendReply("/givepack [user], [pack] - Give a user a pack.");
 		let pack = toId(parts[1]);
 		let userid = toId(this.targetUsername);
-		if (cleanShop.indexOf(pack) < 0) return this.sendReply("This pack does not exist.");
+		if (cleanPacks.indexOf(pack) < 0) return this.sendReply("This pack does not exist.");
 		if (!this.targetUser) return this.sendReply("User '" + this.targetUsername + "' not found.");
 		if (!userPacks[userid]) userPacks[userid] = [];
 		userPacks[userid].push(pack);
@@ -283,7 +460,7 @@ exports.commands = {
 		let userid = toId(this.targetUsername);
 		if (!userPacks[userid]) userPacks[userid] = [];
 		let packIndex = userPacks[userid].indexOf(pack);
-		if (cleanShop.indexOf(pack) < 0) return this.sendReply("This pack does not exist.");
+		if (cleanPacks.indexOf(pack) < 0) return this.sendReply("This pack does not exist.");
 		if (!this.targetUser) return this.sendReply("User '" + this.targetUsername + "' not found.");
 		if (packIndex < 0) return this.sendReply("This user does not have this pack.");
 		userPacks[userid].splice(packIndex, 1);
@@ -309,13 +486,19 @@ exports.commands = {
 		if (!target) return this.sendReply("/card [name] - Shows information about a card.");
 		if (!this.runBroadcast()) return;
 		let cardName = toId(target);
-		if (!cards.hasOwnProperty(cardName)) return this.sendReply(target + ": card not found.");
+		if (!cards[cardName]) return this.sendReply(target + ": card not found.");
 		let card = cards[cardName];
+		let collections = [];
+		for (let u in card.collection) {
+			for (let i in packs) {
+				if (toId(packs[i]) === toId(card.collection[u])) collections.push(packs[i]);
+			}
+		}
 		let html = '<div class="card-div card-td" style="box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);"><img src="' + card.card + '" height="220" title="' + card.name + '" align="right">' +
 			'<h1>' + card.name + '</h1>' +
 			'<br /><br /><h1><font color="' + colors[card.rarity] + '">' + card.rarity + '</font></h1>' +
 			'<br /><br /><font color="#AAA"><i>Points:</i></font> ' + card.points +
-			'<br /><br /><font color="#AAA"><i>Found in Packs:</i></font>' + card.collection.join(', ') +
+			'<br /><br /><font color="#AAA"><i>Found in Packs:</i></font>' + collections.join(', ') +
 			'<br clear="all">';
 		this.sendReply('|raw|' + html);
 	},
@@ -882,7 +1065,6 @@ exports.commands = {
 		Db('completedTrades').set(now, newTransfer);
 	},
 
-	psgo: 'cardshelp',
 	cardshelp: function (target, room, user) {
 		if (!this.runBroadcast()) return;
 		return this.sendReplyBox("<center><b><u>PSGO Help:</u></b></center><br>" +
