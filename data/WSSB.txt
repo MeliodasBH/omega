@@ -1,0 +1,153 @@
+jd - Unown - Choice Specs
+- Ability: I'm not staff - Dies on entry to battle, sets 3 layers of spikes and rocks
+- Move: I'm not supposed to be here - special explosion
+- Movepool:  Hidden Power
+
+~Kanabae - Mega-Mawile - Leftovers
+- Ability: Guard Skill: Harmonics: Illusion, Protean, Unaware, Huge Power
+- Move: Guard Skill: Hand Sonic - Physical 100 BP 100% Accurate Fairy type move that deals damage based on Special Defense(opposite of psyshock) with 30% chance to flinch and raises speed by 2
+- Movepool: Meteor Mash, Earthquake, Sucker Punch
+
+~Tailz - Arcanine - Leftovers
+- Ability: I'm afk - Gains +2 evasion per turn plus random stat +1
+- Move: HUH? - +1 Priority that switches out opponents poke and confuses the next poke sent in
+- Movepool: Earthquake, Extreme Speed, Flare Blitz
+
+&Nii Sama - Darkrai - Life Orb
+- Ability: Goodnight - Uses Dark Void on switch-in, insomnia
+- Move: Shadow Drain - 60BP Dark type special draining move. Power is doubled if target is asleep. PP: 15 / Accuracy: 100% / Priority: 0
+- Movepool: Nasty Plot, Shadow Ball, Dream Eater
+
+@1390ufd - Pikachu-Cosplay - Light Ball
+- Ability: pika power- Lowers opponents Atk/SpA 6, raises every stat +2 on switch in (except evasion)
+- Move: Nuzzle, Knock off, Thunderbolt
+- Movepool: Don't touch me kings shield and raise stats expect evasion
+
+@Alpha Ninja - Weedle - Safety Goggles
+- Ability: 420 Blaze It - 2.5x SpA and speed boost
+- Move: Meme Quake (100 power special earth move that paras)
+- Movepool: Protect, Bug Buzz, Sludge Wave
+
+@LotusChamp Torpid - Zapdos - Leftovers
+- Ability: Stop Being OP - Unaware, and takes 1/(1+priority) damage from attacks, boosts a random stat by 2 when it kills an opposing mon
+- Move: Meme Dream - Snatch + Defog + Light Screen, using snatch's priority
+- Movepool: Thunderbolt, Roost, Heat Wave
+
+@St. Sky M Fall, - Archeops
+- Ability: Falling Skies - When the pokemon enters the battlefield it faints along with the opposing pokemon
+- Move: ITS A KAMIKAZE
+- Movepool: ITS A KAMIKAZE
+
+@Rabinov - Scyther - Eviolite
+- Ability: Dread Armour - All contact moves have a 20% chance to inflict a random status effect; all status effects will heal Scyther for 12.5% HP per turn; +2 defences on switch-in.
+- Move: Miasmic Strike - Removes all buffs (Stat Increase, Aqua Ring, Flash Fire, etc.) from the opponent, 50BP Contact Bug-Type move, hits 3 times. Each time will inflict a random status effect (so it can stack, IE if Confuse is the first hit then Paralysis on the second hit will trigger also)
+- Movepool: Megahorn, Bolt Strike, Crabhammer, Cross Chop, Brave Bird, Head Smash, Flare Blitz, Roost
+
+@Wisp Bot - Ninetales - Leftovers
+- Ability: Hot Memes - Desolate Land, Chlorophyll, Levitate
+- Move: Mixtape - 100 BP Flamethrower with 50% chance to burn and 50% chance to raise all stats by 1 stage
+- Movepool: Shadow Ball, Solar Beam, Morning Sun
+
+@viktria - Banette-Mega - brightpowder
+- Ability: Marionette's Mayhem - Gains Shadow Tag & Prankster, +4 Spe, +4 Def, auto-uses Curse & Wish on switchin. Ghost added to opponent's typing.
+- Move: Notice Me, Senpai ❤ ~ ! Ignores Safeguard. This move receives Prankster benefits. It Confuses, Paralyses (including Ground) and uses Attract successfully on the opponent (lasts beyond switchouts), regardless of the opponent's gender (or lack of). SpD and Def of opponent drops by 1.
+- Movepool: Frustration, Spiky Shield, Shadow Force
+
+%Alan KH - Venusaur-Mega - Big root
+- Ability: Bio-fuel - Gains levitate and +2 speed and Spa
+- Move: Divine Roots (Uses leech seed, safeguard and amnesia. +1 priority)
+- Movepool: Giga Drain, Oblivion Wing, Draining Kiss
+
+%Alliancе Chime - Ralts - Eviolite
+- Ability: Emotional- Triples SpA, Def, Speed and SpDef (like a stronger and different pure power), Magic Guard, Fairy Aura, Unaware
+- Move: Mind Shock- 95 BP Psychic Move, Never Misses. 40% Chance to paralyse the opponent
+- Movepool: Moonblast, Recover, Earth Power
+
+%Chief Sokka - Chansey -  Eviolite
+- Ability: Pain Killers - +1 Special Defense + Fur Coat
+- Move: Clumsy Surgeon- Seismic toss and Paralyzes the opponent and has a 20% chance of raising or Decrease a random stat.
+- Movepool: Heal Bell, soft boiled, Psychic
+
+%Emg TechP Volco - Volcanion - Assault Vest
+- Ability: Volcanic Ash - Levitate, Limber, Adaptability, Magic Bounce, +2 spe +1 spa
+- Move: Volcano's Revenge - Water move, 30% chance to confuse 30% chance to flinch, basepower 130, attacks defense not spD
+- Movepool: Earth Power, Blue Flare, Giga Drain
+
+%Fеlicette - Smeargle - Life Orb
+- Ability: Doodles - Half back HP every turn with +1 to every stat (except for attack, evasion and accuracy)
+- Move: Super Sketchy - Uses opponent's last move against them and bases damage off of opponents stats. If the opponent hasn't used an attacking move yet, the move will have a 90% chance of badly poisoning or paralyzing
+- Movepool: Protect, Boomburst, Seed Flare
+
+%Master Float - Floatzel  - Focus Sash
+- Ability:  Magic Aura - Magic Guard + Can't get statused + (+2atk)
+- Move: Water Mirror (Copies all stat boosts, taunt, substitute, torment while using protect)
+- Movepool: Waterfall, Extreme Speed, Bolt Strike, Sacred Fire
+
+%Mighty Sciz - Charizard-Mega_X  - Life Orb
+- Ability: Dragon's Flames - The Attack and Speed Stat of Charizard-X increases by 2x upon switch-in.
+- Move: Dragon's Revenge - The user of this move hits an attack towards the opponent's pokemon with a power of 120. There is a 10% chance that the user will gain 1.5x Attack and Speed.
+- Movepool: Flare Blitz, Roost, Fire Punch, Dragon Dance, Dragon Claw, Outrage, Earthquake, Shadow Claw, Double Edge, Protect
+
+%St. Sandman - Landorus-I - Life Orb
+- Ability: Gods Force - Sheer force + Full Gravity (Ground type moves hit flying levitate and balloon mons)
+- Move: Anti Gravity Fissure ( 110 pwr Ground type move , hits flying and levitate pokemon with 1.25 X greater power , 10% chance of lowering opponents sp.def)
+- Movepool:  Rock Polish , Sludge Wave , Focus Blast
+
+%SuperJeenius - Manaphy - Leftovers
+- Ability: Imbue - +3 spatk, +1 speed and has no guard support
+- Move: Clean Water Act - Heals 50% of damage dealt and behaves like scald (special water move w/ 80 BP, same burn chance)
+- Movepool: Blizzard, Inferno, Energy Ball
+
++Alliance Aegis - Serperior - Life Orb
+- Ability: Regal Eye- Unaware, Contrary, Uses Mean Look and raises Speed and Def by 2 stages upon entry ( well the result is to increase the speed and def)
+- Move: Collapsation - Sets opponents ability to Traunt, (lowers user Spd and Def (raises from contrary))
+- Movepool: Leaf Storm, Draco Meteor, Overheat, Psycho Boost
+
++AB Dominicarus - Tornadus-Therian - Sitrus Berry
+- Ability: Elemental No Guard - Attacks do not check accuracy; Each succesful attack you land gain +1 attack.
+- Move: Hurricane of Atomsk: 120 base power, This attack's typing acts as Flying and Fire; 75% chance to apply Burn; 75% chance to raise Speed
+- Movepool: Seed Flare, Thief, Taunt
+
++ArkenCiel - Mega-Gallades (Fighting/Ghost/Dark) -  Life Orb
+- Ability: Abyss - Magic Guard + (Ghost type)-ilate + Inverses priority for everyone
+- Move: Instill Fear -  Status, -7 priority, Endure + Taunt + Haze + Ignores sub
+- Movepool: Reversal, Flail, Focus Punch
+
++Combo Breaker - Mega-Gardevoir -  Assault Vest
+- Ability: Combo Breaker - (keeps Pixilate and gains Magic Guard) uses a combination of defog+haze on switch in
+- Move: Focus Blast, Psyshock, Shadow Ball
+- Movepool: Starbomber! - 100BP 95% accuracy Normal-type move before Pixilate boost 30% chance to lower the opponents SpD by one stage. 20% chance to raise Def and Speed by 2 stages
+
++Crystal Xman - Infernape - Life Orb
+- Ability: Tipper - Adaptability and speed boost
+- Move: Shield Breaker - power of 110 bypasses protect
+- Movepool: Close Combat, Flare Blitz, Mach Punch
+
++Escoffier - Dedenne - Life Orb
+- Ability: Sanic - On switch in +3 Atk, +3 SpAtk, +1 Spe. Boosts +1 Spe each turn.
+- Move:b Volt Switch, U-Turn, Play Rough
+- Movepool: Volt Switch, U-Turn, Play Rough
+
++Mіdnight Prоf ΕХΟ - Umbreon - Leftovers
+- Ability: Twilight Shield: Shell Armor + Magic Bounce
+- Move: Dark Causatum - (physical/dark type) 80BP; 100% Accuracy; Like Payback, lowers target's defenses.
+- Movepool: Wish, Curse, Protect
+
++Pegasus Jane - Milotic - Leftovers
+- Ability: Goddess of Seas: Primordial Sea + Rain Dish + Dry Skin + Hydration + Swift Swim, +2 Def +2 Sp. Def on switch in
+- Move: Aquatic Light: 120 BP Sp Atk Fairy Move, Recover 50% of damage dealt, 50% chance to flinch, Casts Aqua Ring +1 priority
+- Movepool: Scald, Rest, Toxic
+
++Sam Crowe - Crobat - Black Sludge
+- Ability: CroweBat - Infiltrator + Magic Guard
+- Move: Thirsty Sam - ( Taunt, Encore, Dragon Dance, Super Fang)
+- Movepool: Brave Bird, Roost, Cross Poison
+
++Silveee - Absol-Mega - Black Glasses
+- Ability: Dank Aura: Pixilate + Dark Aura
+- Move: Server Break: Dark type, 140 base power, has inverse effectiveness, nullifies the foe's ability (Physical, non-contact), 6.9% recoil
+- Movepool: Megahorn, V-Create, Boomburst
+ Wаndov - Pichu-Spiky-Eared - Choice Band
+- Ability: memes - on switch in get +6 attack but your hp drops to 1%. also get magic guard and shadow tag.
+- Move: NUKE - Explosion but with 350 power and + 2 priority also causes paralasys if doesnt kill.
+- Movepool: harden, splash, celebrate

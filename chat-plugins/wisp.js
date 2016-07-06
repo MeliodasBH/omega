@@ -13,6 +13,10 @@ Wisp.customColors = {};
 let regdateCache = {};
 Users.vips = [];
 let Advertisements = {};
+let monData;
+try {
+	monData = fs.readFileSync("data/WSSB.txt").toString().split("\n\n");
+} catch (e) {}
 
 Wisp.autoJoinRooms = {};
 try {
@@ -996,6 +1000,16 @@ exports.commands = {
 		this.sendReplyBox(header + official.join(' ') + nonOfficial.join(' ') + privateRoom.join(' ') + (groupChats.length > 1 ? groupChats.join(' ') : '') + (battleRooms.length > 1 ? battleRooms.join(' ') : ''));
 	},
 
+	ssb: 'wssb',
+	wssb: function (target, room, user) {
+		if (!this.runBroadcast()) return false;
+		if (!target || target === 'help') return this.parse('/help wssb');
+		let targetData = getMonData(toId(target));
+		if (!targetData) return this.errorReply("The staffmon '" + toId(target) + "' could not be found.");
+		return this.sendReplyBox(targetData);
+	},
+	wssbhelp: ["/Wssb [staff member's name] - displays data for a staffmon's movepool, custom move, and custom ability."],
+
 };
 
 Object.assign(Wisp, {
@@ -1275,4 +1289,16 @@ loadRegdateCache();
 
 function saveRegdateCache() {
 	fs.writeFileSync('config/regdate.json', JSON.stringify(regdateCache));
+}
+
+function getMonData(target) {
+	let returnData = null;
+	monData.forEach(function (data) {
+		if (toId(data.split("\n")[0].split(" - ")[0] || " ") === target) {
+			returnData = data.split("\n").map(function (line) {
+				return Tools.escapeHTML(line);
+			}).join("<br />");
+		}
+	});
+	return returnData;
 }
