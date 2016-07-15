@@ -63,8 +63,7 @@ class Poll {
 
 	generateVotes() {
 		let count = 0;
-		let output = '<div style="max-height: 310px; overflow-y: auto;  border-top-right-radius: 20px; border-top-left-radius: 20px;"><table cellspacing="0" style="background: rgba(245, 245, 245, 0.7); width: 100%; border: 1px solid #79330A; border-bottom: none; border-top-right-radius: 20px; border-top-left-radius: 20px;"><tr><td colspan="4" class="poll-td" style="background: rgba(255, 174, 127, 0.8); background: linear-gradient(rgba(255, 193, 156, 0.8), rgba(253, 153, 94, 0.8)); border-bottom: 1px solid #79330A; border-top-right-radius: 20px; border-top-left-radius: 20px; text-shadow: 0px 0px 2px #EEE; box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8) inset, 0px 0px 1px rgba(0, 0, 0, 0.5) inset;"><span style="border: 1px solid #3B763B; color: #2D5A2D; border-radius: 4px; padding: 0 3px; box-shadow: 0px 0px 2px rgba(255, 255, 255, 0.8);"><i class="fa fa-bar-chart"></i> Poll</span> <strong style="font-size: 11pt; color: #512106;">' + this.getQuestionMarkup() +
-			'</strong><br /><span style="font-style: italic; font-size: 9pt; color: #79330A;">[Total Votes: ' + this.totalVotes + '] <i>(Started by ' + this.startedUser + ' ' + moment(this.startTime).fromNow() + '.)</span></td></tr>';
+		let output = '<div style="border-top-right-radius: 20px; border-top-left-radius: 20px;"><table cellspacing="0" style="background: rgba(245, 245, 245, 0.7); width: 100%; border: 1px solid #79330A; border-bottom: none; border-top-right-radius: 20px; border-top-left-radius: 20px;"><tr><td colspan="4" class="poll-td" style="background: rgba(255, 174, 127, 0.8); background: linear-gradient(rgba(255, 193, 156, 0.8), rgba(253, 153, 94, 0.8)); border-bottom: 1px solid #79330A; border-top-right-radius: 20px; border-top-left-radius: 20px; text-shadow: 0px 0px 2px #EEE; box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8) inset, 0px 0px 1px rgba(0, 0, 0, 0.5) inset;"><span style="border: 1px solid #3B763B; color: #2D5A2D; border-radius: 4px; padding: 0 3px; box-shadow: 0px 0px 2px rgba(255, 255, 255, 0.8);"><i class="fa fa-bar-chart"></i> Poll</span> <strong style="font-size: 11pt; color: #512106;">' + this.getQuestionMarkup() + '</strong><br /></td></tr>';
 		this.options.forEach((option, number) => {
 			count++;
 			if (count === 1) output += "<tr>";
@@ -84,7 +83,8 @@ class Poll {
 		let totalVotes = '<br /><span style="font-style: italic; font-size: 9pt; color: #79330A;">[Total Votes: ' + this.totalVotes + '] (Started by ' + this.startedUser + ' ' + moment(this.startTime).fromNow() + '.)</span></div>';
 		let output = '<div style="background: rgba(245, 245, 245, 0.7); width: 100%; border: 1px solid #79330A; border-radius: 20px;"><div class="poll-td" style="background: rgba(255, 174, 127, 0.8); background: linear-gradient(rgba(255, 193, 156, 0.8), rgba(253, 153, 94, 0.8)); border-bottom: 1px solid #79330A; border-top-right-radius: 20px; border-top-left-radius: 20px; text-shadow: 0px 0px 2px #EEE; box-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8) inset, 0px 0px 1px rgba(0, 0, 0, 0.5) inset;">' + icon + ' <strong style="font-size: 11pt; color: #512106;">' + this.getQuestionMarkup() + '</strong>';
 		output += totalVotes;
-		output += '<div style="padding: 8px 15px;"><font color="grey"><small>(Options with 0 votes are not shown)</small></font>';
+		output += '<div style="padding: 8px 15px;"><font color="grey"><small><center>(Options with 0 votes are not shown)</center></small></font>';
+		output += '<table cellspacing="0" style="width: 100%;margin-top: 3px;">';
 		let iter = this.options.entries();
 
 		let i = iter.next();
@@ -93,13 +93,13 @@ class Poll {
 		while (!i.done) {
 			if (i.value[1].votes && i.value[1].votes !== 0) {
 				let percentage = Math.round((i.value[1].votes * 100) / (this.totalVotes || 1));
-				output += '<div style="margin-top: 3px;"><strong>' + (i.value[0] === option ? '<em>' : '') + Tools.escapeHTML(i.value[1].name) + (i.value[0] === option ? '</em>' : '') + '</strong> <small>(' + i.value[1].votes + ' vote' + (i.value[1].votes === 1 ? '' : 's') + ')</small><br /><span style="font-size: 7pt; background: ' + colors[c % 3] + '; padding-right: ' + (percentage * 3) + 'px; border-radius: 20px;"></span><small>&nbsp;' + percentage + '%</small></div>';
+				output += '<tr><td><strong>' + (i.value[0] === option ? '<em>' : '') + Tools.escapeHTML(i.value[1].name) + (i.value[0] === option ? '</em>' : '') + '</strong> <small>(' + i.value[1].votes + ' vote' + (i.value[1].votes === 1 ? '' : 's') + ')</small></td><td><span style="font-size: 7pt; background: ' + colors[c % 3] + '; padding-right: ' + (percentage * 3) + 'px; border-radius: 20px;"></span><small>&nbsp;' + percentage + '%</small></td></tr>';
 			}
 			i = iter.next();
 			c++;
 		}
 		if (option === 0 && !ended) output += '<div><small>(You can\'t vote after viewing results)</small></div>';
-		output += '</div>';
+		output += '</table>';
 
 		return output;
 	}
