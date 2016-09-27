@@ -263,6 +263,7 @@
 37.220.8.128,37.220.8.239,Redstation Limited,http://redstation.com/
 37.220.8.240,37.220.8.255,idealhosting,http://www.idealhosting.com/
 37.220.10.0,37.220.10.127,almahost.co.uk,http://www.almahost.ir/
+37.220.10.144,37.220.10.151,redstation,http://www.redstation.com/
 37.220.11.16,37.220.11.23,Redstation Limited,http://redstation.com/
 37.220.13.0,37.220.13.31,almahost.co.uk,http://www.almahost.ir/
 37.220.13.32,37.220.13.127,Redstation Limited,http://redstation.com/
@@ -365,6 +366,7 @@
 46.33.64.0,46.33.77.255,Akamai,http://akamai.com/
 46.35.192.0,46.35.223.255,23VNet KFT,http://hostit.hu/
 46.37.160.0,46.37.191.255,BurstNET,http://burst.net/
+46.38.48.0,46.38.55.255,TCTEL-HOSTING,http://www.tel.ru/
 46.38.160.0,46.38.191.255,Rackspace,http://www.rackspace.com/
 46.45.128.0,46.45.191.255,Radore Hosting,http://as42926.net/
 46.51.96.0,46.51.96.255,everhost,http://everhost.co/
@@ -1165,6 +1167,7 @@
 85.195.114.192,85.195.114.199,Surfeasy,https://www.surfeasy.com/
 85.195.120.88,85.195.120.95,Surfeasy,https://www.surfeasy.com/
 85.203.17.0,85.203.17.255,Falco Networks,http://falco-networks.com/
+85.203.18.0,85.203.18.255,Falco Networks,http://falco-networks.com/
 85.214.0.0,85.215.255.255,Strato,http://www.strato.de
 85.232.32.0,85.232.63.255,Titan Internet Ltd,http://www.titaninternet.co.uk/index.cfm
 85.234.128.0,85.234.159.255,BlueConnex,http://www.simplytransit.net/
@@ -1541,6 +1544,7 @@
 104.236.0.0,104.236.255.255,DigitalOcean USA,https://www.digitalocean.com/
 104.238.128.0,104.238.191.255,Choopa,https://www.choopa.com/
 104.239.192.0,104.239.223.255,Rackspace,http://www.rackspace.com/
+104.243.37.104,104.243.37.111,Reliable Site,http://www.reliablesite.net/
 104.245.32.0,104.245.39.255,Atlantic.net,http://atlantic.net
 104.245.37.0,104.245.37.255,Atlantic.net,http://atlantic.net
 104.245.96.0,104.245.103.255,VolumeDrive,http://volumedrive.com/
@@ -1994,6 +1998,7 @@
 178.22.80.0,178.22.87.255,prolocation.net,http://prolocation.net/
 178.32.0.0,178.33.255.255,OVH,http://www.ovh.co.uk/
 178.62.0.0,178.62.127.255,DigitalOcean England,https://www.digitalocean.com/
+178.62.128.0,178.62.255.255,DigitalOcean Amsterdam,https://www.digitalocean.com/
 178.63.0.0,178.63.255.255,Hetzner Online AG,http://www.hetzner.de/
 178.73.192.0,178.73.255.255,Portlane,http://www.portlane.com/
 178.77.64.0,178.77.127.255,Host Europe,http://www.hosteurope.de/
