@@ -793,9 +793,6 @@ let parse = exports.parse = function (message, room, user, connection, pmTarget,
 				}
 				curUser.sendTo(room, (room.type === 'chat' ? '|c:|' + (~~(Date.now() / 1000)) + '|' : '|c|') + user.getIdentity(room.id) + '|/html ' + emoticons);
 			}
-			room.lastUpdate++;
-			room.log.push((room.type === 'chat' ? '|c:|' + (~~(Date.now() / 1000)) + '|' : '|c|') + user.getIdentity(room.id) + '|/html ' + emoticons);
-			if (room.log.length > 100) room.log.splice(0, room.log.length - 100);
 			room.messageCount++;
 		} else {
 			if (Users.ShadowBan.checkBanned(user)) {
