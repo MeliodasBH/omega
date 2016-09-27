@@ -193,7 +193,7 @@ exports.commands = {
 
 		Economy.readMoney(userid, money => {
 			this.sendReplyBox(Wisp.nameColor(target, true) + " has " + money + ((money === 1) ? " buck." : " bucks."));
-			if (this.broadcasting) room.update();
+			if (this.broadcasting && room) room.update();
 		});
 	},
 
@@ -752,7 +752,7 @@ exports.commands = {
 							"<b><font color=#24678d>" + Math.round(averageBucks) + "</font></b> bucks.<br /> There is a total of <b><font color=#24678d>" +
 							totalBucks + "</font></b> bucks in the economy."
 						);
-						room.update();
+						if (room) room.update();
 					});
 				});
 			});
@@ -786,7 +786,7 @@ exports.commands = {
 				count++;
 			}
 			self.sendReplyBox(output);
-			room.update();
+			if (room) room.update();
 		}
 
 		Wisp.database.all("SELECT userid, bucks, name FROM users ORDER BY bucks DESC LIMIT $target;", {$target: target}, function (err, rows) {

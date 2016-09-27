@@ -130,8 +130,6 @@ global.Wisp = {};
 
 global.CommandParser = require('./command-parser');
 
-global.Messages = require('./messages');
-
 global.Simulator = require('./simulator');
 
 global.Tournaments = require('./tournaments');
@@ -183,7 +181,6 @@ if (require.main === module) {
 
 // Generate and cache the format list.
 Tools.includeFormats();
-Rooms.global.formatListText = Rooms.global.getFormatListText();
 
 global.TeamValidator = require('./team-validator');
 TeamValidator.PM.spawn();

@@ -239,6 +239,17 @@ Users.isUsernameKnown = function (name) {
 	return false;
 };
 
+Users.isConfirmed = function (name) {
+	if (name.confirmed) return name.confirmed;
+	let userid = toId(name);
+	if (userid in usergroups) return userid;
+	for (let i = 0; i < Rooms.global.chatRooms.length; i++) {
+		let curRoom = Rooms.global.chatRooms[i];
+		if (!curRoom.isPrivate && !curRoom.isPersonal && curRoom.isOfficial && curRoom.auth && userid in curRoom.auth && curRoom.auth[userid] !== '+') return userid;
+	}
+	return false;
+};
+
 Users.importUsergroups = importUsergroups;
 Users.cacheGroupData = cacheGroupData;
 
@@ -911,18 +922,13 @@ class User {
 		this.registered = true;
 		if (this.userid in usergroups) {
 			this.group = usergroups[this.userid].charAt(0);
-			this.confirmed = this.userid;
-			this.autoconfirmed = this.userid;
 		} else {
 			this.group = Config.groupsranking[0];
-			for (let i = 0; i < Rooms.global.chatRooms.length; i++) {
-				let room = Rooms.global.chatRooms[i];
-				if (!room.isPrivate && !room.isPersonal && room.auth && this.userid in room.auth && room.auth[this.userid] !== '+') {
-					// this.confirmed = this.userid;
-					this.autoconfirmed = this.userid;
-					break;
-				}
-			}
+		}
+
+		if (Users.isConfirmed(this)) {
+			this.confirmed = this.userid;
+			this.autoconfirmed = this.userid;
 		}
 
 		if (Config.customavatars && Config.customavatars[this.userid]) {
@@ -935,7 +941,6 @@ class User {
 			this.isStaff = (staffRoom && staffRoom.auth && staffRoom.auth[this.userid]);
 		}
 		if (this.confirmed) {
-			this.autoconfirmed = this.confirmed;
 			this.locked = false;
 			this.namelocked = false;
 		}
@@ -1094,7 +1099,7 @@ class User {
 	tryJoinRoom(room, connection) {
 		let roomid = (room && room.id ? room.id : room);
 		room = Rooms.search(room);
-		if (!room) {
+		if (!room || !room.checkModjoin(this)) {
 			if (!this.named) {
 				return null;
 			} else {
@@ -1112,22 +1117,6 @@ class User {
 			if (errorMessage) {
 				connection.sendTo(roomid, `|noinit|joinfailed|${errorMessage}`);
 				return false;
-			}
-		}
-		if (room.modjoin && !makeRoom) {
-			let userGroup = room.getAuth(this);
-			let modjoinGroup = room.modjoin !== true ? room.modjoin : room.modchat;
-			if (Config.groupsranking.indexOf(userGroup) < Config.groupsranking.indexOf(modjoinGroup)) {
-				if (!this.named) {
-					return null;
-				} else {
-					connection.sendTo(roomid, "|noinit|nonexistent|The room '" + roomid + "' does not exist.");
-					if (Wisp.autoJoinRooms[this.userid] && Wisp.autoJoinRooms[this.userid].includes(room.id)) {
-						Wisp.autoJoinRooms[this.userid].splice(Wisp.autoJoinRooms[this.userid].indexOf(room.id), 1);
-						Wisp.saveAutoJoins();
-					}
-					return false;
-				}
 			}
 		}
 		if (room.isPrivate) {
@@ -1455,6 +1444,11 @@ class User {
 		// deallocate user
 		this.games.forEach(roomid => {
 			let game = Rooms(roomid).game;
+			if (!game) {
+				Monitor.warn(`while deallocating, room ${roomid} did not have a game for ${this.userid} in rooms ${[...this.inRooms]} and games ${[...this.games]}`);
+				this.games.delete(roomid);
+				return;
+			}
 			if (game.ended) return;
 			if (game.forfeit) {
 				game.forfeit(this);

@@ -215,7 +215,7 @@ exports.commands = {
 			if (!this.runBroadcast()) return;
 			Wisp.database.all("SELECT * FROM users WHERE lastSeen NOT NULL", (err, rows) => {
 				this.sendReplyBox("There have been " + rows.length + " user names recorded in this database.");
-				room.update();
+				if (room) room.update();
 			});
 			break;
 		default:
@@ -229,7 +229,7 @@ exports.commands = {
 			Wisp.lastSeen(userid, seen => {
 				if (!seen) return this.sendReplyBox(userName + ' has <font color=\"red\">never</font> been seen online on this server.');
 				this.sendReplyBox(userName + ' was last seen online on ' + moment(seen).format("MMMM Do YYYY, h:mm:ss A") + ' EST. (' + moment(seen).fromNow() + ')');
-				room.update();
+				if (room) room.update();
 			});
 			break;
 		}
@@ -241,7 +241,7 @@ exports.commands = {
 		if (!this.runBroadcast()) return;
 		Wisp.regdate(target, date => {
 			this.sendReplyBox(Wisp.nameColor(target, false) + (date ? " was registered on " + moment(date).format("dddd, MMMM DD, YYYY HH:mmA ZZ") : " is not registered."));
-			room.update();
+			if (room) room.update();
 		});
 	},
 
@@ -304,14 +304,15 @@ exports.commands = {
 			}).on('end', () => {
 				if (data.charAt(0) !== '[') {
 					this.sendReplyBox("Error retrieving definition for <b>" + Tools.escapeHTML(target) + "</b>.");
-					room.update();
+					if (room) room.update();
 					return;
 				}
 				data = JSON.parse(data);
 				let output = '<font color=#24678d><b>Definitions for ' + target + ':</b></font><br />';
 				if (!data[0]) {
 					this.sendReplyBox('No results for <b>"' + target + '"</b>.');
-					return room.update();
+					if (room) room.update();
+					return;
 				} else {
 					let count = 1;
 					for (let u in data) {
@@ -320,7 +321,8 @@ exports.commands = {
 						count++;
 					}
 					this.sendReplyBox(output);
-					return room.update();
+					if (room) room.update();
+					return;
 				}
 			});
 		});
@@ -348,23 +350,26 @@ exports.commands = {
 			}).on('end', () => {
 				if (data.charAt(0) !== '{') {
 					this.sendReplyBox("Error retrieving definition for <b>" + Tools.escapeHTML(target) + "</b>.");
-					room.update();
+					if (room) room.update();
 					return;
 				}
 				data = JSON.parse(data);
 				let definitions = data['list'];
 				if (data['result_type'] === 'no_results') {
 					this.sendReplyBox('No results for <b>"' + Tools.escapeHTML(target) + '"</b>.');
-					return room.update();
+					if (room) room.update();
+					return;
 				} else {
 					if (!definitions[0]['word'] || !definitions[0]['definition']) {
 						self.sendReplyBox('No results for <b>"' + Tools.escapeHTML(target) + '"</b>.');
-						return room.update();
+						if (room) room.update();
+						return;
 					}
 					let output = '<b>' + Tools.escapeHTML(definitions[0]['word']) + ':</b> ' + Tools.escapeHTML(definitions[0]['definition']).replace(/\r\n/g, '<br />').replace(/\n/g, ' ');
 					if (output.length > 400) output = output.slice(0, 400) + '...';
 					this.sendReplyBox(output);
-					return room.update();
+					if (room) room.update();
+					return;
 				}
 			});
 		});

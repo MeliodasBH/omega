@@ -646,7 +646,7 @@ exports.commands = {
 			let card = cardData[sortedCards[rarity][packId][Math.floor(Math.random() * sortedCards[rarity][packId].length)]];
 			addCard(user.userid, card.id);
 
-			this.sendReplyBox(Wisp.nameColor(user.name, true) + ' got <font color="' + colors[rarity] + '">' + card.rarity + '</font> ' +
+			this.sendReplyBox(Wisp.nameColor(user.name, true) + ' got a <font color="' + colors[rarity] + '">' + card.rarity + '</font> ' +
 				'<button name="send" value="/card ' + card.id + '"><b>' + Tools.escapeHTML(card.name) + '</b></button> from a ' +
 				'<button name="send" value="/buypack ' + packId + '">' + Tools.escapeHTML(packs[packId]) + ' Pack</button>.'
 			);
@@ -887,7 +887,7 @@ exports.commands = {
 				}
 			}
 			this.sendReplyBox(ladderTitle + tableTop + tableRows + tableBottom);
-			room.update();
+			if (room) room.update();
 		});
 	},
 

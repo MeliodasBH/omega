@@ -783,7 +783,12 @@ exports.BattleMovedex = {
 		onModifyMove: function (move) {
 			move.type = '???';
 		},
-		self: false,
+		struggleRecoil: false,
+	},
+	surf: {
+		inherit: true,
+		shortDesc: "Hits adjacent foes. Power doubles against Dive.",
+		target: "allAdjacentFoes",
 	},
 	synthesis: {
 		inherit: true,
