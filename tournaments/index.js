@@ -890,6 +890,7 @@ class Tournament {
 				secondMoney = Math.round(firstMoney / 2);
 				firstBuck = 'buck';
 				secondBuck = 'buck';
+				Wisp.leagueTourPoints(toId(winner), toId(runnerUp), tourSize, this.room);
 			}
 
 			if (this.prizeMoney) {

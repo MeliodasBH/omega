@@ -135,6 +135,9 @@ class Battle {
 
 		this.send('init', this.format, rated ? '1' : '');
 		this.process.pendingTasks.set(room.id, this);
+		if (this.format === 'monotype') {
+			Wisp.isLvLBattle(room.p1.userid, room.p2.userid, room.id, 'start');
+		}
 	}
 
 	send() {
@@ -214,6 +217,11 @@ class Battle {
 			break;
 
 		case 'winupdate':
+			if (this.format === 'monotype' && lines[lines.length - 1].split('|')[1] === 'tie') {
+				Wisp.isLvLBattle(toId(this.room.p1), toId(this.room.p2), this.room.id, 'tie');
+			} else if (this.format === 'monotype' && lines[lines.length - 1].split('|')[1] === 'win') {
+				Wisp.isLvLBattle(toId(this.room.p1), toId(this.room.p2), this.room.id, 'p-' + toId(lines[lines.length - 1].split('|')[2]));
+			}
 			this.room.push(lines.slice(3));
 			this.started = true;
 			this.inactiveSide = -1;
