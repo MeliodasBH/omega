@@ -1319,7 +1319,7 @@ Object.assign(Wisp, {
 	setBackground: function (user, image) {
 		let userid = toId(user);
 		Wisp.database.run("UPDATE users SET background=$background WHERE userid=$userid;", {$background: image, $userid: userid}, function (err) {
-			if (err) return console('setBackground 1: ' + err);
+			if (err) return console.log('setBackground 1: ' + err);
 			Wisp.database.run("INSERT OR IGNORE INTO users (userid,background) VALUES ($userid, $background)", {$userid: userid, $background: image}, function (err) {
 				if (err) return console.log("setBackground 2: " + err);
 			});
@@ -1337,7 +1337,7 @@ Object.assign(Wisp, {
 	setMusic: function (user, music) {
 		let userid = toId(user);
 		Wisp.database.run("UPDATE users SET music=$music WHERE userid=$userid;", {$music: music, $userid: userid}, function (err) {
-			if (err) return console('setMusic 1: ' + err);
+			if (err) return console.log('setMusic 1: ' + err);
 			Wisp.database.run("INSERT OR IGNORE INTO users (userid, music) VALUES ($userid, $music)", {$userid: userid, $music: music}, function (err) {
 				if (err) return console.log("setMusic 2: " + err);
 			});
@@ -1349,7 +1349,7 @@ Object.assign(Wisp, {
 		if (userid.match(/^guest[0-9]/)) return false;
 		let date = Date.now();
 		Wisp.database.run("UPDATE users SET lastSeen=$date, name=$name WHERE userid=$userid;", {$date: date, $name: user, $userid: userid}, function (err) {
-			if (err) return console('updateSeen 1: ' + err);
+			if (err) return console.log('updateSeen 1: ' + err);
 			Wisp.database.run("INSERT OR IGNORE INTO users (userid, name, lastSeen) VALUES ($userid, $name, $date)", {$userid: userid, $name: user, $date: date}, function (err) {
 				if (err) return console.log("updateSeen 2: " + err);
 			});
