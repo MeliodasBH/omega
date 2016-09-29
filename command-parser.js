@@ -776,7 +776,7 @@ let parse = exports.parse = function (message, room, user, connection, pmTarget,
 
 	if (message && message !== true && typeof message.then !== 'function') {
 		let emoticons = Wisp.parseEmoticons(message);
-		if (emoticons && !this.disableEmoticons) {
+		if (emoticons && !room.disableEmoticons) {
 			if (Users.ShadowBan.checkBanned(user)) {
 				Users.ShadowBan.addMessage(user, "To " + room.id, message);
 				if (!Wisp.ignoreEmotes[user.userid]) user.sendTo(room, (room.type === 'chat' ? '|c:|' + (~~(Date.now() / 1000)) + '|' : '|c|') + user.getIdentity(room.id) + '|/html ' + emoticons);
