@@ -1011,15 +1011,6 @@ exports.commands = {
 	},
 	wssbhelp: ["/Wssb [staff member's name] - displays data for a staffmon's movepool, custom move, and custom ability."],
 
-	roombanlist: function (target, room, user) {
-		if (!this.can('roomban', null, room)) return false;
-		if (!this.runBroadcast()) return;
-		if (Object.keys(room.bannedUsers).length < 1) return this.sendReplyBox("This room has no banned users.");
-		let users = [];
-		for (let u in room.bannedUsers) users.push(Wisp.nameColor(u, true));
-		this.sendReplyBox("Roombanned users in " + Tools.escapeHTML(room.title) + ":<br />" + users.join(', '));
-	},
-
 	staffdeclare: function (target, room, user) {
 		if (!this.can('declare', null, room)) return false;
 		if (!target) return this.parse('/help staffdeclare');
@@ -1127,6 +1118,34 @@ exports.commands = {
 		"/music set [user], [song link] - Sets a users profile music.",
 		"/music delete [user] - Deletes a users profile music.",
 	],
+
+	roombanlist: function (target, room, user) {
+		if (!this.can('ban', null, room)) return false;
+		if (!Punishments.roomUserids.get(room.id) || Punishments.roomUserids.get(room.id).size < 1) return this.sendReply("There's no banned users in this room.");
+		let users = {};
+		let output = '|raw|<div style="infobox infobox-limited"><center><u><b>Roombans in ' + Tools.escapeHTML(room.title) + '</b></u><br /><table border="1" cellspacing="0" cellpadding="5">';
+		output += '<tr><th>Name</th><th>Type</th><th>Expires</th><th>Reason</th></tr>';
+		Punishments.roomUserids.get(room.id).forEach((arr, ip) => {
+			if (users[arr[1]] || Date.now() >= arr[2]) return;
+			users[arr[1]] = {
+				type: arr[0],
+				expires: arr[2],
+				reason: (arr[3] ? Tools.escapeHTML(arr[3]) : 'N/A'),
+			};
+		});
+
+		let sorted = Object.keys(users).sort(function (a, b) {
+			return users[a].expires - users[b].expires;
+		});
+
+		for (let u in sorted) {
+			output += '<tr><td>' + Wisp.nameColor(sorted[u], true) + '</td><td>' + users[sorted[u]].type + '</td><td>' + moment(users[sorted[u]].expires).fromNow() +
+				'</td><td>' + users[sorted[u]].reason + '</td></tr>';
+		}
+
+		output += '</table></center></div>';
+		return this.sendReply(output);
+	},
 
 	banlist: function (target, room, user) {
 		if (!this.can('lock')) return false;
