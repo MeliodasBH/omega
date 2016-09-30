@@ -133,6 +133,7 @@ function getCards(name, callback) {
 }
 
 function takeCard(userid, card, callback) {
+	userid = toId(userid);
 	card = toId(card);
 	database.all("SELECT * FROM cards WHERE userid=$userid AND id=$card", {$userid: userid, $card: card}, function (err, rows) {
 		if (err) return console.log("takeCard 1: " + err);
