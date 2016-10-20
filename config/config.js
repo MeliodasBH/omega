@@ -276,6 +276,7 @@ exports.grouplist = [
 		globalonly: true,
 		tournamentsmanagement: true,
 		gamemanagement: true,
+		customavatar: true,
 	},
 	{
 		symbol: '#',
@@ -358,6 +359,7 @@ exports.grouplist = [
 		inherit: ' ',
 		alts: 's',
 		broadcast: true,
+		tournamentsmanagement: true,
 	},
 	{
 		symbol: ' ',
